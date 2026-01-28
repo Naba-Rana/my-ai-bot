@@ -31,15 +31,14 @@
 </div>
 
 <script type="module">
-    // Latest Library Version
-    import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+    // 1. Version fix kiya (v0.21.0 ya latest)
+    import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai@0.21.0";
 
-    // 1. APNI NAYI API KEY YAHAN DALEN
     const API_KEY = "AIzaSyCnWatQZBftvHEOFxC8s9y2nGMvxlEOrjY"; 
     const genAI = new GoogleGenerativeAI(API_KEY);
 
-    // 2. Updated Model (Gemini 1.5 Flash is the latest stable)
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // 2. Model ke aage '-latest' lagaya
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 
     window.sendMessage = async function() {
         const input = document.getElementById("userInput");
@@ -53,7 +52,7 @@
         chatWindow.scrollTop = chatWindow.scrollHeight;
 
         try {
-            // Using the latest generation method
+            // Content generate karne ka sahi tarika
             const result = await model.generateContent(text);
             const response = await result.response;
             const botText = response.text();
@@ -69,3 +68,4 @@
 
 </body>
 </html>
+
