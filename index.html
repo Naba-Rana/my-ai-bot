@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI FAQ Chatbot</title>
+    <title>AI FAQ Assistant</title>
     <style>
-        /* Design/CSS */
         body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         #chat-container { width: 100%; max-width: 400px; height: 500px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); display: flex; flex-direction: column; overflow: hidden; }
         #header { background: #075e54; color: white; padding: 15px; text-align: center; font-weight: bold; }
@@ -15,14 +14,14 @@
         .bot { background: white; align-self: flex-start; color: black; }
         #input-area { display: flex; padding: 10px; background: white; border-top: 1px solid #ddd; }
         input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 20px; outline: none; }
-        button { background: #075e54; color: white; border: none; padding: 10px 15px; margin-left: 5px; border-radius: 50%; cursor: pointer; }
+        button { background: #075e54; color: white; border: none; padding: 10px 15px; margin-left: 5px; border-radius: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div id="chat-container">
     <div id="header">AI FAQ Assistant</div>
-    <div id="messages" id="chatWindow">
+    <div id="messages">
         <div class="message bot">Assalam-o-Alaikum! Main apki kaise madad kar sakta hoon?</div>
     </div>
     <div id="input-area">
@@ -32,14 +31,15 @@
 </div>
 
 <script type="module">
-import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai@0.1.0";
+    // Version 0.1.0 ka istemal taake compatibility ka masla na ho
+    import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai@0.1.0";
 
-    // Aapki API Key
-    const API_KEY = "AIzaSyD2Fo6_Ptpil7vU9pIARBDsroTo1R6Ap5U";
+    // 1. APNI NAYI API KEY YAHAN DALEN
+    const API_KEY = "PASTE_YOUR_NEW_API_KEY_HERE"; 
     const genAI = new GoogleGenerativeAI(API_KEY);
+
+    // 2. Model ka naam 'gemini-pro' rakha hai jo zyada stable hai
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-        systemInstruction: "Tum ek helpful FAQ assistant ho. Roman Urdu aur English mein jawab do."
-    });
 
     window.sendMessage = async function() {
         const input = document.getElementById("userInput");
@@ -48,26 +48,24 @@ import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai@0.1.0"
 
         if (!text) return;
 
-        // User ka message screen par dikhana
         chatWindow.innerHTML += `<div class="message user">${text}</div>`;
         input.value = "";
         chatWindow.scrollTop = chatWindow.scrollHeight;
 
-        // Catch block ko aise badlein:
-catch (error) {
-    console.error(error); 
-    chatWindow.innerHTML += `<div class="message bot" style="color: red;">Error: ${error.message}</div>`;
-}
-        catch (error) {
-            chatWindow.innerHTML += `<div class="message bot" style="color: red;">Error: Internet ya API ka masla hai.</div>`;
-            console.error(error);
+        try {
+            const result = await model.generateContent(text);
+            const response = await result.response;
+            const botText = response.text();
+
+            chatWindow.innerHTML += `<div class="message bot">${botText}</div>`;
+        } catch (error) {
+            // Console mein error dekhne ke liye
+            console.error("Detailed Error:", error);
+            chatWindow.innerHTML += `<div class="message bot" style="color: red;">Error: ${error.message}</div>`;
         }
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 </script>
 
 </body>
-
 </html>
-
-
