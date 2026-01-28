@@ -21,11 +21,11 @@
 
 <div id="chat-container">
     <div id="header">AI FAQ Assistant</div>
-    <div id="messages" id="chatWindow">
+    <div id="messages">
         <div class="message bot">Assalam-o-Alaikum! Main apki kaise madad kar sakta hoon?</div>
     </div>
     <div id="input-area">
-        <input type="text" id="userInput" placeholder="Sawal likhein..." onkeypress="handleEnter(event)">
+        <input type="text" id="userInput" placeholder="Sawal likhein...">
         <button id="sendBtn" onclick="sendMessage()">Send</button>
     </div>
 </div>
@@ -36,11 +36,8 @@
     // 1. APNI NAYI API KEY YAHAN DALEN
     const API_KEY = "AIzaSyD2Fo6_Ptpil7vU9pIARBDsroTo1R6Ap5U"; 
     const genAI = new GoogleGenerativeAI(API_KEY);
-
-    // 2. Model setup (gemini-pro is most stable)
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-    // Function to handle Send button
     window.sendMessage = async function() {
         const input = document.getElementById("userInput");
         const chatWindow = document.getElementById("messages");
@@ -48,7 +45,6 @@
 
         if (!text) return;
 
-        // Message screen par dikhana
         chatWindow.innerHTML += `<div class="message user">${text}</div>`;
         input.value = "";
         chatWindow.scrollTop = chatWindow.scrollHeight;
@@ -57,21 +53,13 @@
             const result = await model.generateContent(text);
             const response = await result.response;
             const botText = response.text();
-
             chatWindow.innerHTML += `<div class="message bot">${botText}</div>`;
         } catch (error) {
             console.error("Error:", error);
             chatWindow.innerHTML += `<div class="message bot" style="color: red;">Error: ${error.message}</div>`;
         }
         chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
-
-    // Enter key support
-    window.handleEnter = function(event) {
-        if (event.key === "Enter") {
-            sendMessage();
-        }
-    }
+    };
 </script>
 
 </body>
