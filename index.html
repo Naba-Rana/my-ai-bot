@@ -31,14 +31,12 @@
 </div>
 
 <script type="module">
-    // 1. Version fix kiya (v0.21.0 ya latest)
     import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai@0.21.0";
 
+    // 1. Correct Model Name (Removed -latest)
     const API_KEY = "AIzaSyCnWatQZBftvHEOFxC8s9y2nGMvxlEOrjY"; 
     const genAI = new GoogleGenerativeAI(API_KEY);
-
-    // 2. Model ke aage '-latest' lagaya
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     window.sendMessage = async function() {
         const input = document.getElementById("userInput");
@@ -47,12 +45,12 @@
 
         if (!text) return;
 
+        // 2. Added Backticks ( ` ) for template literals
         chatWindow.innerHTML += `<div class="message user">${text}</div>`;
         input.value = "";
         chatWindow.scrollTop = chatWindow.scrollHeight;
 
         try {
-            // Content generate karne ka sahi tarika
             const result = await model.generateContent(text);
             const response = await result.response;
             const botText = response.text();
@@ -65,7 +63,7 @@
         chatWindow.scrollTop = chatWindow.scrollHeight;
     };
 </script>
-
 </body>
 </html>
+
 
