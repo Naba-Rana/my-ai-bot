@@ -31,12 +31,15 @@
 </div>
 
 <script type="module">
-    import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai@0.1.0";
+    // Latest Library Version
+    import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
     // 1. APNI NAYI API KEY YAHAN DALEN
-    const API_KEY = "AIzaSyD2Fo6_Ptpil7vU9pIARBDsroTo1R6Ap5U"; 
+    const API_KEY = "AIzaSyCnWatQZBftvHEOFxC8s9y2nGMvxlEOrjY"; 
     const genAI = new GoogleGenerativeAI(API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+    // 2. Updated Model (Gemini 1.5 Flash is the latest stable)
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     window.sendMessage = async function() {
         const input = document.getElementById("userInput");
@@ -50,12 +53,14 @@
         chatWindow.scrollTop = chatWindow.scrollHeight;
 
         try {
+            // Using the latest generation method
             const result = await model.generateContent(text);
             const response = await result.response;
             const botText = response.text();
+            
             chatWindow.innerHTML += `<div class="message bot">${botText}</div>`;
         } catch (error) {
-            console.error("Error:", error);
+            console.error("Error Detail:", error);
             chatWindow.innerHTML += `<div class="message bot" style="color: red;">Error: ${error.message}</div>`;
         }
         chatWindow.scrollTop = chatWindow.scrollHeight;
