@@ -9,38 +9,38 @@
         #chat-container { width: 100%; max-width: 400px; height: 500px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); display: flex; flex-direction: column; overflow: hidden; }
         #header { background: #075e54; color: white; padding: 15px; text-align: center; font-weight: bold; }
         #messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #e5ddd5; }
-        .message { padding: 8px 12px; border-radius: 10px; font-size: 14px; max-width: 80%; line-height: 1.5; }
+        .message { padding: 8px 12px; border-radius: 10px; font-size: 14px; max-width: 80%; line-height: 1.5; word-wrap: break-word; }
         .user { background: #dcf8c6; align-self: flex-end; color: black; }
         .bot { background: white; align-self: flex-start; color: black; }
         #input-area { display: flex; padding: 10px; background: white; border-top: 1px solid #ddd; }
-        input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 20px; outline: none; }
-        button { background: #075e54; color: white; border: none; padding: 10px 15px; margin-left: 5px; border-radius: 20px; cursor: pointer; }
+        input { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 20px; outline: none; }
+        button { background: #075e54; color: white; border: none; padding: 10px 20px; margin-left: 5px; border-radius: 20px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div id="chat-container">
     <div id="header">AI FAQ Assistant</div>
-    <div id="messages">
+    <div id="messages" id="chatWindow">
         <div class="message bot">Assalam-o-Alaikum! Main apki kaise madad kar sakta hoon?</div>
     </div>
     <div id="input-area">
-        <input type="text" id="userInput" placeholder="Sawal likhein...">
-        <button onclick="sendMessage()">Send</button>
+        <input type="text" id="userInput" placeholder="Sawal likhein..." onkeypress="handleEnter(event)">
+        <button id="sendBtn" onclick="sendMessage()">Send</button>
     </div>
 </div>
 
 <script type="module">
-    // Version 0.1.0 ka istemal taake compatibility ka masla na ho
     import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai@0.1.0";
 
     // 1. APNI NAYI API KEY YAHAN DALEN
-    const API_KEY = "PASTE_YOUR_NEW_API_KEY_HERE"; 
+    const API_KEY = "AIzaSyD2Fo6_Ptpil7vU9pIARBDsroTo1R6Ap5U"; 
     const genAI = new GoogleGenerativeAI(API_KEY);
 
-    // 2. Model ka naam 'gemini-pro' rakha hai jo zyada stable hai
+    // 2. Model setup (gemini-pro is most stable)
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
+    // Function to handle Send button
     window.sendMessage = async function() {
         const input = document.getElementById("userInput");
         const chatWindow = document.getElementById("messages");
@@ -48,6 +48,7 @@
 
         if (!text) return;
 
+        // Message screen par dikhana
         chatWindow.innerHTML += `<div class="message user">${text}</div>`;
         input.value = "";
         chatWindow.scrollTop = chatWindow.scrollHeight;
@@ -59,11 +60,17 @@
 
             chatWindow.innerHTML += `<div class="message bot">${botText}</div>`;
         } catch (error) {
-            // Console mein error dekhne ke liye
-            console.error("Detailed Error:", error);
+            console.error("Error:", error);
             chatWindow.innerHTML += `<div class="message bot" style="color: red;">Error: ${error.message}</div>`;
         }
         chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    // Enter key support
+    window.handleEnter = function(event) {
+        if (event.key === "Enter") {
+            sendMessage();
+        }
     }
 </script>
 
