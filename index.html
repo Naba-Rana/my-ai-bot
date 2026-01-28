@@ -54,15 +54,12 @@
         input.value = "";
         chatWindow.scrollTop = chatWindow.scrollHeight;
 
-        try {
-            // API se jawab mangna
-            const result = await model.generateContent(text);
-            const response = await result.response;
-            const botText = response.text();
-
-            // Bot ka jawab dikhana
-            chatWindow.innerHTML += `<div class="message bot">${botText}</div>`;
-        } catch (error) {
+        // Catch block ko aise badlein:
+catch (error) {
+    console.error(error); 
+    chatWindow.innerHTML += `<div class="message bot" style="color: red;">Error: ${error.message}</div>`;
+}
+        catch (error) {
             chatWindow.innerHTML += `<div class="message bot" style="color: red;">Error: Internet ya API ka masla hai.</div>`;
             console.error(error);
         }
@@ -73,3 +70,4 @@
 </body>
 
 </html>
+
